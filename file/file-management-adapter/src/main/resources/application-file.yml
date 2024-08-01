@@ -1,0 +1,15 @@
+spring:
+  cloud:
+    aws:
+      credentials:
+        accessKey:
+        secretKey:
+      region:
+        static: ap-northeast-2
+      s3:
+        bucket: module
+    gcp:
+      project-id:
+      credentials:
+        json-path:
+      bucket:

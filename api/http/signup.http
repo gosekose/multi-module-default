@@ -1,0 +1,32 @@
+### 1. 회원가입 실패
+
+POST {{baseUrl}}/api/v1/signup
+Content-Type: application/json
+Accept: */*
+
+{
+  "phoneNumber": "010121-1111-2222",
+  "password": "1234"
+}
+
+### 2. 회원가입 실패
+
+POST {{baseUrl}}/api/v1/signup
+Content-Type: application/json
+Accept: */*
+
+{
+  "phoneNumber": "01012111112222",
+  "password": "1234"
+}
+
+### 2. 회원가입 성공
+
+POST {{baseUrl}}/api/v1/signup
+Content-Type: application/json
+Accept: */*
+
+{
+  "phoneNumber": "010-1211-1222",
+  "password": "1234"
+}

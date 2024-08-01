@@ -1,0 +1,13 @@
+### 1. 업로드
+
+GET {{baseUrl}}/api/v1/files/presignedUrl/upload?fileName=testFile.txt
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyMDI0MDczMTIxMDUzNDU4NC1mNmMwY2MyYS1jZTQ0LTQ1YmEtYWI3OC0zMTA4NDVmMjZkMGQiLCJleHAiOjE3MjMwMzIzMzl9.S0man27DfBqg85-ieZcroqkZVGrzZcnRYD9sr6mfJ0sP3t-pEn2jtZX98akuhQMfYqZZk5_px6s1fxnz0oN-hA
+Accept: */*
+Connection: keep-alive
+
+> {%
+    client.test("Fetch Presigned URL", function () {
+        client.assert(response.status === 200);
+    });
+%}

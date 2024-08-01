@@ -1,0 +1,18 @@
+springdoc:
+  default-consumes-media-type: application/json
+  default-produces-media-type: application/json
+  use-fqn: true
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  group-configs:
+    - group: "module"
+      packages-to-scan: "com.api.endpoint"
+  swagger-ui:
+    path: /module/swagger.html
+    operations-sorter: alpha
+    disable-swagger-default-url: true
+    display-request-duration: true
+    url: /v3/api-docs
+  paths-to-match:
+    - /**

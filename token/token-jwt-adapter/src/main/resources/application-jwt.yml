@@ -1,0 +1,3 @@
+jwt:
+  secret-key:
+  expiration-millis: 604800000
