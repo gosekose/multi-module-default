@@ -2,8 +2,8 @@ spring:
   cloud:
     aws:
       credentials:
-        accessKey:
-        secretKey:
+        accessKey: test
+        secretKey: test
       region:
         static: ap-northeast-2
       s3:
