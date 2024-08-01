@@ -1,8 +1,8 @@
 package com.module.api.security.filter
 
+import com.module.api.security.FilterErrorResponseWrapper
 import com.module.api.security.WhiteList.WHITE_LIST
 import com.module.api.security.context.AuthenticationContext
-import com.module.domain.exception.ApplicationBusinessException
 import com.module.domain.exception.BusinessErrorCause
 import com.module.domain.port.outport.TokenPort
 import com.module.domain.validation.returnIfNotNull
@@ -34,13 +34,13 @@ class AuthorizationToMemberIdHeaderFilter(
             return
         }
 
-        val accessToken =
-            try {
-                val authorizationHeader = request.getHeader(AUTHORIZATION_HEADER)
-                parseBearer(authorizationHeader)
-            } catch (e: Exception) {
-                throw ApplicationBusinessException(BusinessErrorCause.UNAUTHORIZED)
-            }
+        val accessToken = try {
+            val authorizationHeader = request.getHeader(AUTHORIZATION_HEADER)
+            parseBearer(authorizationHeader)
+        } catch (e: Exception) {
+            FilterErrorResponseWrapper.wrap(response)
+            return
+        }
 
         val userId = tokenPort.parse(token = accessToken)
 
@@ -52,19 +52,22 @@ class AuthorizationToMemberIdHeaderFilter(
 
         val wrappedRequest = CustomHttpServletRequestWrapper(request, memberId)
 
-        val authenticationContext = AuthenticationContext(userId = userId)
-        val authenticationToken =
-            UsernamePasswordAuthenticationToken(
-                authenticationContext,
-                authenticationContext.userId,
-                authenticationContext.authorities,
-            )
+        val authenticationToken = setAuthenticationToken(userId)
 
         authenticationManager.authenticate(authenticationToken).also {
             SecurityContextHolder.getContext().authentication = it
         }
 
         filterChain.doFilter(wrappedRequest, response)
+    }
+
+    private fun setAuthenticationToken(userId: String): UsernamePasswordAuthenticationToken {
+        val authenticationContext = AuthenticationContext(userId = userId)
+        return UsernamePasswordAuthenticationToken(
+            authenticationContext,
+            authenticationContext.userId,
+            authenticationContext.authorities,
+        )
     }
 
     private fun parseBearer(authorization: String): String {

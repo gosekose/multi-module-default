@@ -1,6 +1,7 @@
 package com.module.api.security
 
 import com.module.api.security.context.CustomAuthenticationProvider
+import com.module.api.security.context.ProviderAuthenticationEntryPoint
 import com.module.api.security.filter.AuthorizationToMemberIdHeaderFilter
 import com.module.domain.port.outport.TokenPort
 import com.module.member.port.outport.LoginSessionPort
@@ -14,7 +15,6 @@ import org.springframework.security.authentication.AuthenticationProvider
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
-import org.springframework.security.web.AuthenticationEntryPoint
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher
@@ -29,7 +29,6 @@ import org.springframework.web.filter.CorsFilter
 class SecurityConfiguration(
     private val tokenPort: TokenPort,
     private val loginSessionPort: LoginSessionPort,
-    private val entryPoint: AuthenticationEntryPoint,
 ) {
     private val antPathRequestMatchers =
         WhiteList.WHITE_LIST.map { pattern -> AntPathRequestMatcher(pattern) }.toTypedArray()
@@ -58,7 +57,7 @@ class SecurityConfiguration(
                 it.requestMatchers(*antPathRequestMatchers).permitAll()
                 it.anyRequest().authenticated()
             }
-            .exceptionHandling { it.authenticationEntryPoint(entryPoint) }
+            .exceptionHandling { it.authenticationEntryPoint(exceptionHandler()) }
             .build()
     }
 
@@ -101,5 +100,10 @@ class SecurityConfiguration(
 
     fun customAuthenticationProvider(): AuthenticationProvider {
         return CustomAuthenticationProvider()
+    }
+
+    @Bean
+    fun exceptionHandler(): ProviderAuthenticationEntryPoint {
+        return ProviderAuthenticationEntryPoint()
     }
 }
